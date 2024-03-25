@@ -1,45 +1,66 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt')
-const validator = require('validator')
 
 const Schema = mongoose.Schema;
-
 const userSchema = new Schema({
-    userType:Number,
-    userName:String,
-    password:String,
-    email:String,
-    ownedPackages:Object
-},{timestamps: true})
+  userType: {
+    type: Number,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  surname: {
+    type: String,
+    required: true
+  },
+  birthday: {
+    type: Date,
+    required: true
+  },
+  userName: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  imagepath: {
+    type: String,
+    required: false
+  },
+  experience: {
+    type: String,
+    required: false
+  },
+  education: {
+    type: String,
+    required: false
+  },
+  ownedPackages: {
+    type: Object
+  }
+}, { timestamps: true });
 
-userSchema.statics.signup = async function(userType,userName,email, password) {
 
-    // validation
-    if (!email || !password) {
-      throw Error('All fields must be filled')
-    }
-    if (!validator.isEmail(email)) {
-      throw Error('Email not valid')
-    }
-    if (!validator.isStrongPassword(password)) {
-      throw Error('Password not strong enough')
-    }
-  
-    const exists = await this.findOne({ email })
-  
-    if (exists) {
-      throw Error('Email already in use')
-    }
-  
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
-  
-    const user = await this.create({ userType,userName,email, password: hash })
-  
-    return user
-}
 
-userSchema.statics.login = async function(email, password) {
+/**
+ * Kullanıcı girişini gerçekleştirir.
+ * 
+ * @param {string} email - Kullanıcı e-posta adresi.
+ * @param {string} password - Kullanıcı şifresi.
+ * @returns {object} - Giriş yapmış kullanıcı nesnesi.
+ * @throws {Error} - Boş alanlar, yanlış e-posta veya şifre durumunda hata fırlatır.
+ */
+
+userSchema.statics.login = async function (email, password) {
 
   if (!email || !password) {
     throw Error('All fields must be filled')
@@ -59,7 +80,7 @@ userSchema.statics.login = async function(email, password) {
 }
 
 
-const User = mongoose.model('users',userSchema);
+const User = mongoose.model('users', userSchema);
 module.exports = User
 
 

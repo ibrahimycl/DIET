@@ -1,6 +1,8 @@
 const User = require("../model/userModel.js");
 const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
+const bcrypt = require('bcrypt')
+const validator = require('validator')
 
 dotenv.config();
 
@@ -17,14 +19,15 @@ const createToken = (res, _id) => {
 
 exports.signupUser = async (req, res) => {
 	console.log(req.body);
-	const { userType,userName,email, password } = req.body
+	const {userType, name, surname, userName, birthday,  email, password } = req.body
+	console.log("controller  ",name, surname, userName, birthday,  email, password );
 
 	try {
-		const user = await User.signup(userType,userName,email, password)
-
+		const salt = await bcrypt.genSalt(10)
+		const hash = await bcrypt.hash(password, salt)
+		const user = await User.create({userType, name, surname, birthday, email, userName, password: hash })
 		const token = createToken(res, user._id)
-
-
+	
 		res.status(200).json({ email, token })
 	} catch (error) {
 		res.status(400).json({ error: error.message })
