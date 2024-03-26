@@ -1,7 +1,6 @@
 const User = require("../model/userModel.js");
 const validator = require('validator');
 const bcrypt = require('bcrypt');
-console.log(bcrypt);
 
 /* Kullanıcı Kayıt olurken gerekli doğrulamaların yapıldığı fonksiyon*/
 async function validateSignup(req, res, next) {
@@ -55,7 +54,6 @@ async function validateLogin(req, res, next) {
     return next();
     
   } catch (error) {
-    console.log("sadsadasdasdasdsadas");
     return res.status(422).json({ message: error.message });
   }
 }

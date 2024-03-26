@@ -1,10 +1,18 @@
 const express = require("express");
 const connection = require("./config/DB");
 const authRoutes = require("./routes/authRoutes");
+const packageRoutes = require("./routes/packageRoutes");
 const dotenv = require("dotenv");
+const cookieParser = require('cookie-parser');
+
 
 dotenv.config();
 const app = express();
+
+
+app.use(cookieParser());
+
+
 
 // database connection
 connection();
@@ -18,6 +26,8 @@ app.get("/",(req,res) => {
 })
 // routes
 app.use("/api/user", authRoutes);
+app.use("/api/package", packageRoutes);
+
 
 const port = process.env.PORT || 5000;
 

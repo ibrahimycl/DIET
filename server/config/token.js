@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -12,3 +13,5 @@ const createToken = (res, _id) => {
 	});
 	return token;
 }
+
+module.exports = {createToken};
