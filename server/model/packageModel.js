@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-const packageShema = new Schema({
+const packageSchema = new Schema({
     name: {
         type: String,
         required:true
@@ -18,11 +18,15 @@ const packageShema = new Schema({
         type: Number,
         required: true
     },
-    describe: {
+    description: {
         type:String
+    },
+    dietitianId: { // Diyetisyen ID'si
+        type: Schema.Types.ObjectId,
+        ref: 'users', // Diyetisyen şemasına referans
+        required: true
     }
-    
 },{ timestamps: true });
 
-const Package = mongoose.model('packages', packageShema);
+const Package = mongoose.model('packages', packageSchema);
 module.exports = Package

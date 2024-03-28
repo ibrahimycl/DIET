@@ -1,13 +1,12 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const express = require('express');
-
+const User = require('../model/userModel');
 
 dotenv.config();
 
+// Bu middleware, isteği doğrular ve kullanıcının oturum açmış olup olmadığını kontrol eder.
 const authMiddleware = (req, res, next) => {
     // İstekten token'ı al
-    console.log(req.cookies);
     const token = req.cookies.jwt;
 
     // Token var mı yok mu kontrol et
@@ -18,13 +17,41 @@ const authMiddleware = (req, res, next) => {
     try {
         // Token'i doğrula
         const decodedToken = jwt.verify(token, process.env.SECRET);
-        // Token doğrulandıysa, kullanıcı kimliğini ekleyin ve devam edin
         req.userId = decodedToken._id;
         next();
     } catch (error) {
-        // Token doğrulanamadıysa veya başka bir hata varsa, uygun bir hata yanıtı gönderin
         return res.status(401).json({ error: 'Unauthorized - Invalid token' });
     }
 };
 
-module.exports = { authMiddleware };
+// Bu middleware, isteği doğrular ve kullanıcının bir diyetisyen olup olmadığını kontrol eder.
+const authDietitianMiddleware = async (req, res, next) => {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized - Missing token' });
+    }
+
+    try {
+        const decodedToken = jwt.verify(token, process.env.SECRET);
+        
+        const userId = decodedToken._id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized - User not found' });
+        }
+
+        if (user.userType !== 1) { 
+            return res.status(403).json({ error: 'Forbidden - User is not a dietitian' });
+        }
+
+        req.body.dietitianId = userId;
+        next();
+    } catch (error) {
+        return res.status(401).json({ error: 'Unauthorized - Invalid token' });
+    }
+};
+
+module.exports = { authMiddleware, authDietitianMiddleware };

@@ -12,10 +12,6 @@ exports.signupUser = async (req, res) => {
 		const hash = await bcrypt.hash(password, salt)
 		const user = await User.create({ userType, name, surname, birthday, email, userName, password: hash })
 		const token = createToken(res, user._id)
-		res.cookie("jwt", token, {
-			withCredentials: true,
-			httpOnly: false,
-		  });
 
 		res.status(200).json({ email, token })
 	} catch (error) {
@@ -27,12 +23,8 @@ exports.signupUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
 	const { email } = req.body
 	try {
-		const token = createToken(res, User._id)
-		res.cookie('jwt', '', {
-			httpOnly: true,
-			expires: new Date(0),
-		});
-
+		user = await User.findOne({email:email})
+		const token = createToken(res, user._id)
 		res.status(200).json({ email, token })
 	} catch (error) {
 		res.status(400).json({ error: error.message })
