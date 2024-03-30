@@ -5,19 +5,31 @@ const Package = require("../model/packageModel");
 exports.addedPackage = async (req, res) =>{
 
     const {userId, _id} = req.body;
+    const buyDate = new Date();
+
 
     try {
-        const updateUser = await User.findById(userId);
-        if(!updateUser.ownedPackages.includes(_id))
+        const package = await Package.findById(_id);
+        if(package)
         {
-            await User.updateOne({_id: _id}, { $push: { ownedPackages: _id } }, { new: true })
-            res.status(200).json({ message: "Package successfully added"});
+            const updateUser = await User.findById(userId);
+            if(!updateUser.ownedPackages.find(pkg => pkg._id == _id))
+            {
+                const { month } = package;
+                await User.updateOne({_id: userId}, { $push: { ownedPackages: {_id,month,buyDate} } }, { new: true })
+                res.status(200).json({ message: "Package successfully added"});
+            }
+            else
+            {
+                res.status(404).json("This package is already taken");
+            }
         }
         else
         {
-            res.status(404).json("This package is already taken");
+            res.status(404).json("Package not found");
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
+
