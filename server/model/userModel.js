@@ -45,7 +45,7 @@ const userSchema = new Schema({
     required: false
   },
   ownedPackages: {
-    type: Object
+    type: Array
   }
 }, { timestamps: true });
 

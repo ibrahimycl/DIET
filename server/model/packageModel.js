@@ -21,10 +21,14 @@ const packageSchema = new Schema({
     description: {
         type:String
     },
-    dietitianId: { // Diyetisyen ID'si
+    dietitianId: { 
         type: Schema.Types.ObjectId,
-        ref: 'users', // Diyetisyen şemasına referans
+        ref: 'users', 
         required: true
+    },
+    active:{
+        type:Boolean,
+        required:true
     }
 },{ timestamps: true });
 

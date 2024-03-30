@@ -6,18 +6,15 @@ dotenv.config();
 
 // Bu middleware, isteği doğrular ve kullanıcının oturum açmış olup olmadığını kontrol eder.
 const authMiddleware = (req, res, next) => {
-    // İstekten token'ı al
     const token = req.cookies.jwt;
 
-    // Token var mı yok mu kontrol et
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized - Missing token' });
     }
 
     try {
-        // Token'i doğrula
         const decodedToken = jwt.verify(token, process.env.SECRET);
-        req.userId = decodedToken._id;
+        req.body.userId = decodedToken._id;
         next();
     } catch (error) {
         return res.status(401).json({ error: 'Unauthorized - Invalid token' });
@@ -27,6 +24,7 @@ const authMiddleware = (req, res, next) => {
 // Bu middleware, isteği doğrular ve kullanıcının bir diyetisyen olup olmadığını kontrol eder.
 const authDietitianMiddleware = async (req, res, next) => {
     const token = req.cookies.jwt;
+    console.log(token);
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized - Missing token' });
