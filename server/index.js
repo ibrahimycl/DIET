@@ -4,6 +4,7 @@ const authRoutes = require("./routes/authRoutes");
 const packageRoutes = require("./routes/packageRoutes");
 const dotenv = require("dotenv");
 const cookieParser = require('cookie-parser');
+const cronJob = require("./jobs/dailyJobs");
 
 
 dotenv.config();
