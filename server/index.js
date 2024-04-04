@@ -2,6 +2,7 @@ const express = require("express");
 const connection = require("./config/DB");
 const authRoutes = require("./routes/authRoutes");
 const packageRoutes = require("./routes/packageRoutes");
+const communityRoutes = require("./routes/communityRoutes");
 const dotenv = require("dotenv");
 const cookieParser = require('cookie-parser');
 const cronJob = require("./jobs/dailyJobs");
@@ -28,6 +29,9 @@ app.get("/",(req,res) => {
 // routes
 app.use("/api/user", authRoutes);
 app.use("/api/package", packageRoutes);
+app.use("/api/community",communityRoutes);
+// app.use("/api/community", communityRoutes);
+
 
 
 const port = process.env.PORT || 5000;
