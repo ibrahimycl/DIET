@@ -15,7 +15,7 @@ const communitySchema = new Schema({
     },
     like:{
         type:Number,
-        default: 0
+        default: 0 //TODO 0 altına düşmesini engelle
     },
     likedUsers:{
         type: Array,

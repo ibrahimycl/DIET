@@ -1,7 +1,7 @@
 const Community = require("../model/communityModel");
 const User = require("../model/userModel");
 
-
+// Topluluk mesajı oluşturmayı sağlar.
 exports.CreatePost = async(req, res) =>{
 
     try {
@@ -12,6 +12,35 @@ exports.CreatePost = async(req, res) =>{
     }
 }
 
+// Bir topluluk mesajını güncellemeyi sağlar.
+exports.updatePost = async(req,res) =>{
+
+    const { _id, userId, ...updateData } = req.body;
+
+    try {
+        const updadetPost = await Community.findById(_id);
+        if (updadetPost) 
+        {
+            if(userId == updadetPost.userId)
+            {
+                await Community.updateOne({ _id: _id }, { $set: updateData });
+                res.status(200).json("Post updated successfully");
+            }
+            else
+            {
+                res.status(400).json("User is not authorized to update this post");
+            }
+        } 
+        else 
+        {
+            res.status(400).json("Post not found");
+        }
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+// Bir topluluk mesajının beğenmeyi ve beğeniyi geri çekmeyi sağlar.
 exports.ChangeLikes = async (req, res) => {
     const { _id, userId } = req.body;
     try {
