@@ -40,6 +40,33 @@ exports.updatePost = async(req,res) =>{
     }
 }
 
+//Topluluk mesajlarının silinmesini sağlar
+exports.deletePost = async (req,res) =>{
+    const {_id, userId} = req.body;
+    
+    try {
+        const deletedPost = await Community.findById(_id);
+        if(deletedPost)
+        {
+            if(userId == deletedPost.userId)
+            {
+                await Community.findByIdAndDelete(_id)
+                res.status(200).json("Post delete successfully");
+            }
+            else
+            {
+                res.status(400).json("User is not authorized to delete this post");
+            }
+        }
+        else
+        {
+            res.status(400).json("Post not found");
+        }
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 // Bir topluluk mesajının beğenmeyi ve beğeniyi geri çekmeyi sağlar.
 exports.ChangeLikes = async (req, res) => {
     const { _id, userId } = req.body;
