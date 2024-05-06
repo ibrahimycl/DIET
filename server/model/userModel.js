@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+
 const userSchema = new Schema({
   userType: {
     type: Number,
@@ -43,6 +44,9 @@ const userSchema = new Schema({
   education: {
     type: String,
     required: false
+  },
+  basket:{
+    type:Array
   },
   ownedPackages: {
     type: Array

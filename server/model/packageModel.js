@@ -29,6 +29,18 @@ const packageSchema = new Schema({
     active:{
         type:Boolean,
         required:true
+    },
+    iban: {
+        type: String,
+        required: true
+      },
+    accountHolderName: {
+        type: String,
+        required: true
+    },
+    bankName: {
+        type: String,
+        required: true
     }
 },{ timestamps: true });
 
