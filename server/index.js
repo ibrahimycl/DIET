@@ -3,6 +3,7 @@ const connection = require("./config/DB");
 const authRoutes = require("./routes/authRoutes");
 const packageRoutes = require("./routes/packageRoutes");
 const communityRoutes = require("./routes/communityRoutes");
+const foodRoutes = require("./routes/foodRoutes");
 const dotenv = require("dotenv");
 const cookieParser = require('cookie-parser');
 const cronJob = require("./jobs/dailyJobs");
@@ -30,6 +31,8 @@ app.get("/",(req,res) => {
 app.use("/api/user", authRoutes);
 app.use("/api/package", packageRoutes);
 app.use("/api/community",communityRoutes);
+app.use("/api/food",foodRoutes);
+
 // app.use("/api/community", communityRoutes);
 
 
