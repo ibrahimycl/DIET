@@ -7,8 +7,8 @@ exports.addedFood = async (req, res) => {
     try {
         const response = await axios.get('https://api.edamam.com/api/food-database/v2/parser', {
             params: {
-                app_id: '2571ce76',
-                app_key: 'f5155adf496744f5e8ade1be21b2c50e',
+                app_id: process.env.FOOD_APP_ID,
+                app_key: process.env.FOOD_APP_KEY,
                 ingr: foodName 
             }
         });
