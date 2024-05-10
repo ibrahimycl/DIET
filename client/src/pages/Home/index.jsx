@@ -1,9 +1,14 @@
+import Layout from "../../layout"
+
+
 function Home() {
 
   return (
-    <div className="flex justify-center items-cente">
-      Home
-    </div>
+    <Layout>
+      <div className="flex justify-center items-center">
+        Home
+      </div>
+    </Layout>
   )
 }
 
