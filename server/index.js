@@ -7,11 +7,14 @@ const foodRoutes = require("./routes/foodRoutes");
 const dotenv = require("dotenv");
 const cookieParser = require('cookie-parser');
 const cronJob = require("./jobs/dailyJobs");
+const cors = require('cors');
+
 
 
 dotenv.config();
 const app = express();
 
+app.use(cors());
 
 app.use(cookieParser());
 

@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Layout from "../../layout";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -13,12 +18,36 @@ function Login() {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email, "Password:", password);
+    try {
+      const response = await fetch('http://localhost:5000/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log('Login response:', data);
+        toast.success('Giriş Başarılı', { position: "top-right" });
+        navigate("/");
+      } else {
+        const errorMessage = await response.json();
+        console.error('Error:', errorMessage);
+        toast.error('Hatalı Email veya Şifre', { position: "top-right" });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Bir hata oluştu', { position: "top-right" });
+    }
+  
     setEmail('');
     setPassword('');
   };
+  
 
   return (
     <Layout>
@@ -32,6 +61,7 @@ function Login() {
               id="email"
               value={email}
               onChange={handleEmailChange}
+              maxLength={60} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="E-posta adresinizi girin"
               required
@@ -44,6 +74,7 @@ function Login() {
               id="password"
               value={password}
               onChange={handlePasswordChange}
+              maxLength={30} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Şifrenizi girin"
               required
@@ -65,6 +96,7 @@ function Login() {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </Layout>
   );
 }

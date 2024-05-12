@@ -8,7 +8,7 @@ const AppRoutes = [
     },
     {
         path:"/auth/login",
-        element:<Login/>
+        element: <Login/>
     }
 ]
 

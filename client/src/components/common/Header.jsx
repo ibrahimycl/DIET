@@ -8,14 +8,14 @@ function Header() {
           <div className="flex items-center">
             <div className="text-green-800 font-bold mr-4">DIYET DOSTUM</div>
             <div className="hidden md:flex">
-              <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Ana Sayfa</a>
+              <a href="/" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Ana Sayfa</a>
               <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Topluluk</a>
               <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Paketler</a>
               <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Görüşmeler</a>
             </div>
           </div>
           <div className="flex">
-            <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Giriş</a>
+            <a href="/auth/login" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Giriş</a>
             <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Kaydol</a>
           </div>
           <div className="flex md:hidden">
