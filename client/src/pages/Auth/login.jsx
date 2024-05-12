@@ -33,6 +33,7 @@ function Login() {
         const data = await response.json();
         console.log('Login response:', data);
         toast.success('Giriş Başarılı', { position: "top-right" });
+        document.cookie = `token=${data.token}; path=/`; // Assuming token is in data.token
         navigate("/");
       } else {
         const errorMessage = await response.json();
@@ -88,7 +89,7 @@ function Login() {
               Giriş Yap
             </button>
             <a
-              href="#"
+              href="/auth/signup"
               className="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800"
             >
               Henüz Bir Hesabın Yoksa Kayıt Olunuz

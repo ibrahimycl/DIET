@@ -1,6 +1,31 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
+
 
 function Header() {
+  const hasToken = document.cookie.includes('token');
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (response.ok) {
+        document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        navigate("/");
+      } else {
+        console.error('Logout işlemi başarısız oldu.');
+      }
+    } catch (error) {
+      console.error('Logout işlemi sırasında bir hata oluştu:', error);
+    }
+  };
+
   return (
     <nav className="bg-green-400 bg-opacity-75 p-4">
       <div className="max-w-7xl mx-auto px-4">
@@ -15,8 +40,18 @@ function Header() {
             </div>
           </div>
           <div className="flex">
-            <a href="/auth/login" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Giriş</a>
-            <a href="#" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Kaydol</a>
+            {/* hasToken değerine göre Giriş veya Sepet butonu görüntülenecek */}
+            {hasToken ? (
+              <a href="/cart" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Sepet</a>
+            ) : (
+              <a href="/auth/login" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Giriş</a>
+            )}
+            {/* hasToken değerine göre Kaydol veya Çıkış butonu görüntülenecek */}
+            {hasToken ? (
+              <button onClick={handleLogout} className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Çıkış</button>
+            ) : (
+              <a href="/auth/signup" className="text-green-800 hover:bg-green-500 px-3 py-2 rounded-md">Kaydol</a>
+            )}
           </div>
           <div className="flex md:hidden">
             <button className="text-green-800 hover:bg-green-500 focus:outline-none focus:bg-green-500 px-3 py-2 rounded-md">
@@ -33,8 +68,18 @@ function Header() {
           <a href="#" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Topluluk</a>
           <a href="#" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Paketler</a>
           <a href="#" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Görüşmeler</a>
-          <a href="#" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Giriş</a>
-          <a href="#" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Kaydol</a>
+          {/* hasToken değerine göre Giriş veya Sepet butonu görüntülenecek */}
+          {hasToken ? (
+            <a href="/cart" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Sepet</a>
+          ) : (
+            <a href="/auth/login" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Giriş</a>
+          )}
+          {/* hasToken değerine göre Kaydol veya Çıkış butonu görüntülenecek */}
+          {hasToken ? (
+            <button onClick={handleLogout} className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Çıkış</button>
+          ) : (
+            <a href="/auth/signup" className="text-green-800 hover:bg-green-500 block px-3 py-2 rounded-md">Kaydol</a>
+          )}
         </div>
       </div>
     </nav>

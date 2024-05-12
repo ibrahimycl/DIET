@@ -5,15 +5,14 @@ const { createToken } = require('../config/token.js')
 
 //Kullanıcının DB ye kayıt olduğu fonksiyondur
 exports.signupUser = async (req, res) => {
-	const { userType, name, surname, userName, birthday, email, password } = req.body
+	const { password } = req.body
 
 	try {
 		const salt = await bcrypt.genSalt(10)
-		const hash = await bcrypt.hash(password, salt)
-		const user = await User.create({ userType, name, surname, birthday, email, userName, password: hash })
-		const token = createToken(res, user._id)
+		req.body.password = await bcrypt.hash(password, salt)
+		const user = await User.create( req.body )
 
-		res.status(200).json({ email, token })
+		res.status(200).json(req.body.email)
 	} catch (error) {
 		res.status(400).json({ error: error.message })
 	}
@@ -25,7 +24,7 @@ exports.loginUser = async (req, res) => {
 	try {
 		user = await User.findOne({email:email})
 		const token = createToken(res, user._id)
-		res.status(200).json({ email, token })
+		res.status(200).json({ user , token })
 	} catch (error) {
 		res.status(400).json({ error: error.message })
 	}
