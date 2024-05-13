@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Layout from "../../layout";
 import { ToastContainer, toast } from 'react-toastify';
@@ -52,7 +52,7 @@ function Login() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
+      <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-xl ">
         <h2 className="text-2xl font-bold mb-6">Giriş Yap</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -84,7 +84,7 @@ function Login() {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Giriş Yap
             </button>

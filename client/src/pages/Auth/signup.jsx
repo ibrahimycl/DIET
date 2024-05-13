@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Layout from "../../layout";
 import { ToastContainer, toast } from 'react-toastify';
@@ -95,7 +95,7 @@ function Signup() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
+      <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-xl">
         <h2 className="text-2xl font-bold mb-6">Kayıt Ol</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -174,7 +174,7 @@ function Signup() {
               required
             />
           </div>
-          {userType === 'dietitian' && (
+          {userType === "1" && (
             <div>
               <div className="mb-4">
                 <label htmlFor="experience" className="block text-gray-700 font-bold mb-2">Tecrübe (Yıl)</label>
@@ -207,7 +207,7 @@ function Signup() {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-green hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Kayıt Ol
             </button>
