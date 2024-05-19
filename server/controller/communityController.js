@@ -2,15 +2,26 @@ const Community = require("../model/communityModel");
 const User = require("../model/userModel");
 
 // Topluluk mesajı oluşturmayı sağlar.
-exports.CreatePost = async(req, res) =>{
-
+exports.CreatePost = async (req, res) => {
     try {
-        await Community.create(req.body);
-        res.status(200).json("Community messages create succesfully");
+      const userId = req.userId;
+      const { text } = req.body;
+      const imagePath = req.file ? req.file.path : null; 
+  
+      // Yeni bir topluluk gönderisi oluştur
+      const newPost = new Community({
+        userId,
+        description:text,
+        imagePath
+      });
+  
+      await newPost.save();
+  
+      res.status(200).json("Community message created successfully");
     } catch (error) {
-        res.status(400).json({ error: error.message });
+      res.status(400).json({ error: error.message });
     }
-}
+  }
 
 // Bir topluluk mesajını güncellemeyi sağlar.
 exports.updatePost = async(req,res) =>{
