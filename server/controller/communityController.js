@@ -7,21 +7,28 @@ exports.CreatePost = async (req, res) => {
       const userId = req.userId;
       const { text } = req.body;
       const imagePath = req.file ? req.file.path : null; 
-  
+
+      let fileName = null;
+
+     if (imagePath) {
+      const parts = imagePath.split("\\");
+      fileName = parts[parts.length - 1];
+    }
+      console.log(fileName);
       // Yeni bir topluluk gönderisi oluştur
       const newPost = new Community({
         userId,
         description:text,
-        imagePath
+        imagePath:fileName
       });
   
       await newPost.save();
   
-      res.status(200).json("Community message created successfully");
+      res.status(200).json(newPost);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
-  }
+}
 
 // Bir topluluk mesajını güncellemeyi sağlar.
 exports.updatePost = async(req,res) =>{
@@ -111,3 +118,13 @@ exports.ChangeLikes = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
+exports.getCommunity = async (req, res) => {
+  try {
+    const communityPosts = await Community.find(); // Tüm topluluk gönderilerini getir
+
+    res.status(200).json(communityPosts);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};

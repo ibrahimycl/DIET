@@ -13,7 +13,10 @@ export default {
       "footer": "#f3f4f6",
       "first": "#052e16",
       "white":"#ffff",
-      "black":"#020617"
+      "black":"#020617",
+      "gray":"#E8DFCA",
+      "darkGray":"#333333"
+
     }
   },
   plugins: [],

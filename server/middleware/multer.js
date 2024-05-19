@@ -4,7 +4,7 @@ const path = require('path');
 // Dosyaların yükleneceği klasör ve dosya adı ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'community_img/'); // Dosyaların yükleneceği klasör
+    cb(null, '../client/public/images/'); // Dosyaların yükleneceği klasör
   },
   filename: (req, file, cb) => {
     // Dosya adının benzersiz bir şekilde oluşturulması
