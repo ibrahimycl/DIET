@@ -62,15 +62,15 @@ function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4">Ali K.</h3>
-              <p className="text-gray-700">"Diyetisyen topluluğundan aldığım destekle kilo vermek artık çok daha kolay. Teşekkürler!"</p>
+              <p className="text-gray-700">Diyetisyen topluluğundan aldığım destekle kilo vermek artık çok daha kolay. Teşekkürler!</p>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4">Ayşe Y.</h3>
-              <p className="text-gray-700">"Paketlerinden birini denedim ve sonuçtan çok memnun kaldım. Herkese tavsiye ederim."</p>
+              <p className="text-gray-700">Paketlerinden birini denedim ve sonuçtan çok memnun kaldım. Herkese tavsiye ederim.</p>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4">Mehmet T.</h3>
-              <p className="text-gray-700">"Topluluğunuzun sunduğu bilgiler gerçekten değerli. Sağlıklı yaşam konusunda çok şey öğrendim."</p>
+              <p className="text-gray-700">Topluluğunuzun sunduğu bilgiler gerçekten değerli. Sağlıklı yaşam konusunda çok şey öğrendim.</p>
             </div>
           </div>
         </div>
