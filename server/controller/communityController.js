@@ -14,15 +14,11 @@ exports.CreatePost = async (req, res) => {
       const parts = imagePath.split("\\");
       fileName = parts[parts.length - 1];
     }
-      console.log(fileName);
-      // Yeni bir topluluk gönderisi oluştur
-      const newPost = new Community({
+    const newPost = await Community.create({
         userId,
-        description:text,
-        imagePath:fileName
+        description: text,
+        imagePath: fileName
       });
-  
-      await newPost.save();
   
       res.status(200).json(newPost);
     } catch (error) {
@@ -92,7 +88,7 @@ exports.ChangeLikes = async (req, res) => {
         const controlId = await Community.findById(_id);
         if(controlId)
         {
-            const updateOperation = await Community.findOneAndUpdate(
+            var updateOperation = await Community.findOneAndUpdate(
                 { _id: _id, likedUsers: { $ne: userId } }, // Sadece userId'i içermeyen belgeleri güncelle
                 { $push: { likedUsers: userId }, $inc: { like: 1 } }, // userId'i likedUsers'a ekle ve like sayısını arttır
                 { new: true } // Güncellenmiş belgeyi döndür
@@ -100,13 +96,13 @@ exports.ChangeLikes = async (req, res) => {
         
             if (!updateOperation) {
                 // Eğer kullanıcı zaten önceden beğendi ise, beğenmeyi kaldır
-                await Community.findOneAndUpdate(
+                updateOperation = await Community.findOneAndUpdate(
                     { _id: _id, likedUsers: userId }, // userId'i içeren belgeyi bul
                     { $pull: { likedUsers: userId }, $inc: { like: -1 } }, // userId'i likedUsers'dan çıkar ve like sayısını azalt
                     { new: true } // Güncellenmiş belgeyi döndür
                 );
             }
-            res.status(200).json("Like has been changed");
+            res.status(200).json(updateOperation);
         }
         else
         {
@@ -120,11 +116,17 @@ exports.ChangeLikes = async (req, res) => {
 }
 
 exports.getCommunity = async (req, res) => {
-  try {
-    const communityPosts = await Community.find(); // Tüm topluluk gönderilerini getir
-
-    res.status(200).json(communityPosts);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+    try {
+      const communityPosts = await Community.find()
+        .populate({
+          path: 'userId', // UserId alanını User modelinden doldur
+          select: 'name surname userName' // İstediğiniz alanları seçin
+        })
+        .sort({ _id: -1 }); // _id'ye göre ters sıralama
+  
+      res.status(200).json(communityPosts);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+  
