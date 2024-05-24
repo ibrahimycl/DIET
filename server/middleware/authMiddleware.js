@@ -6,9 +6,7 @@ dotenv.config();
 
 // Bu middleware, isteği doğrular ve kullanıcının oturum açmış olup olmadığını kontrol eder.
 const authMiddleware = (req, res, next) => {
-    var token = req.cookies.jwt;
-    token = (!token) ?req.headers.authorization.split(' ')[1]:token;
-
+    var token = req.cookies.jwt || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized - Missing token' });
     }

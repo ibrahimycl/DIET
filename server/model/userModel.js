@@ -26,16 +26,18 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   email: {
     type: String,
     required: true,
     unique: true
   },
-  imagepath: {
+  imagePath: {
     type: String,
-    required: false
+    required: false,
+    default: 'images.jpg'
   },
   experience: {
     type: String,
