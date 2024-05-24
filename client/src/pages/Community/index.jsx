@@ -12,7 +12,7 @@ function Community() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/community')
+    axios.post('http://localhost:5000/api/community')
       .then(response => setPosts(response.data))
       .catch(error => console.error('Gönderiler alınırken hata oluştu:', error));
     console.log(posts);

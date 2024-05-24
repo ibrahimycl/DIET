@@ -35,16 +35,18 @@ function Card({ post }) {
 
   return (
     <div className="flex justify-center items-center mb-8">
-      <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative">
+      <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl relative">
         <div className="flex justify-between items-center mb-4">
-          <div className="text-lg font-semibold text-gray-800">{post.userId.name} {post.userId.surname} <span className="text-green lowercase">@{post.userId.userName}</span></div>
+          <div className="text-lg font-semibold text-gray-800">
+            {post.userId.name} {post.userId.surname} <span className="text-green lowercase">@{post.userId.userName}</span>
+          </div>
         </div>
         {post.imagePath && (
-          <div className="h-64 overflow-hidden flex justify-center items-center mb-4">
-            <img src={`/images/${post.imagePath}`} alt="image" className="w-full h-full object-cover rounded-lg" />
+          <div className="h-48 sm:h-64 overflow-hidden flex justify-center items-center mb-4">
+            <img src={`/images/community_images/${post.imagePath}`} alt="image" className="w-full h-full object-cover rounded-lg" />
           </div>
         )}
-        <div className={`overflow-hidden ${isExpanded ? '' : 'h-20'} transition-height duration-300 ease-in-out`}>
+        <div className={`overflow-hidden ${isExpanded ? '' : 'h-20'} transition-all duration-300 ease-in-out`}>
           <p className="text-first mb-4">
             {isExpanded ? post.description : `${post.description.substring(0, 150)}...`}
             {post.description.length > 150 && (
