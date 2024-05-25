@@ -3,7 +3,8 @@ const Package = require("../model/packageModel");
 const Community = require("../model/communityModel");
 
 exports.getProfile = async (req, res) => {
-  const { id } = req.body;
+  var { id, userId } = req.body;
+  id = (!id)? userId : id;
 
   try {
     const user = await User.findById(id);
@@ -27,6 +28,7 @@ exports.getProfile = async (req, res) => {
     }
 
     res.status(200).json({
+      userId:id,
       name: user.name,
       surname: user.surname,
       username: user.userName,

@@ -44,17 +44,17 @@ function Header() {
             </div>
           </div>
           <div className="flex">
-            
             {hasToken ? (
-              <a href="/cart" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Sepet</a>
+              <>
+                <a href="/profile" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Profil</a>
+                <a href="/cart" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Sepet</a>
+                <button onClick={handleLogout} className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Çıkış</button>
+              </>
             ) : (
-              <a href="/auth/login" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Giriş</a>
-            )}
-            
-            {hasToken ? (
-              <button onClick={handleLogout} className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Çıkış</button>
-            ) : (
-              <a href="/auth/signup" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Kaydol</a>
+              <>
+                <a href="/auth/login" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Giriş</a>
+                <a href="/auth/signup" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Kaydol</a>
+              </>
             )}
           </div>
           <div className="flex md:hidden">
@@ -69,20 +69,20 @@ function Header() {
       <div className={isMenuOpen ? "block md:hidden" : "hidden md:hidden"} id="mobile-menu">
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <a href="/" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Ana Sayfa</a>
-          <a href="#" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Topluluk</a>
-          <a href="#" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Paketler</a>
+          <a href="/community" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Topluluk</a>
+          <a href="/packages" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Paketler</a>
           <a href="#" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Görüşmeler</a>
-          
           {hasToken ? (
-            <a href="/cart" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Sepet</a>
+            <>
+              <a href="/profile" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Profil</a>
+              <a href="/cart" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Sepet</a>
+              <button onClick={handleLogout} className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Çıkış</button>
+            </>
           ) : (
-            <a href="/auth/login" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Giriş</a>
-          )}
-          
-          {hasToken ? (
-            <button onClick={handleLogout} className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Çıkış</button>
-          ) : (
-            <a href="/auth/signup" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Kaydol</a>
+            <>
+              <a href="/auth/login" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Giriş</a>
+              <a href="/auth/signup" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Kaydol</a>
+            </>
           )}
         </div>
       </div>

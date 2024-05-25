@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from "../../layout";
 import Card from '../../components/Card/Card';
-
+import { useParams } from 'react-router-dom';
 
 function Profil() {
+  const { id } = useParams();
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [packages, setPackages] = useState([]);
-  const [token, setToken] = useState();
 
   const fetchUserData = async () => {
     try {
       let token;
-
       const cookieString = document.cookie
         .split('; ')
         .find(row => row.startsWith('token='));
@@ -22,14 +21,15 @@ function Profil() {
         token = cookieString.split('=')[1];
       }
 
-      const response = await axios.post('http://localhost:5000/api/profile/id', { id: '660822f023f96fd18bce54f6' }, {
+      let requestData = (id) ? { id: id.split('=')[1] } : {};
+
+      const response = await axios.post('http://localhost:5000/api/profile/id', requestData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
-
-      const responsePost = await axios.post('http://localhost:5000/api/community', { id: '660822f023f96fd18bce54f6' }, {
+      const responsePost = await axios.post('http://localhost:5000/api/community', {id:response.data.userId}, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -38,15 +38,12 @@ function Profil() {
       setUser(response.data);
       setPosts(responsePost.data);
       setPackages(response.data.packages);
-
-
     } catch (error) {
       console.error('Veri alınırken hata oluştu:', error);
     }
   };
 
   const handleFileSelect = async (event) => {
-
     let token;
 
     const cookieString = document.cookie
@@ -79,7 +76,7 @@ function Profil() {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [id]);
 
   return (
     <Layout>
@@ -92,10 +89,12 @@ function Profil() {
               className="hidden"
               id="fileInput"
               onChange={handleFileSelect}
+              disabled={!!id} 
             />
             <label
               htmlFor="fileInput"
-              className="cursor-pointer"
+              className={`cursor-pointer ${id ? 'pointer-events-none' : ''}`} 
+              onClick={id ? (e) => e.preventDefault() : null} 
             >
               <img
                 src={`/images/profile_images/${user.imagePath}`}

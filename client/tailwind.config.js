@@ -7,18 +7,19 @@ export default {
   theme: {
     extend: {},
     colors: {
-      "lighterGreen": "#ffff",
+      "lighterGreen": "#ffffff",
       "lightGreen": "#86efac",
       "green": "#166534",
       "footer": "#f3f4f6",
       "first": "#052e16",
-      "white":"#ffff",
-      "black":"#020617",
-      "gray":"#E8DFCA",
-      "darkGray":"#333333"
-
+      "white": "#ffffff",
+      "black": "#020617",
+      "gray": "#E8DFCA",
+      "darkGray": "#333333",
+      "blue-500": "#3b82f6",
+      "red-500": "#ef4444",
+      "gray-600": "#4b5563",
     }
   },
   plugins: [],
 }
-

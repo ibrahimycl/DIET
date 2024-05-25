@@ -108,6 +108,7 @@ exports.ChangeLikes = async (req, res) => {
 exports.getCommunity = async (req, res) => {
     try {
         const { id } = req.body;
+        console.log(id);
         let query = {};
         if (id) {
             query.userId = id;

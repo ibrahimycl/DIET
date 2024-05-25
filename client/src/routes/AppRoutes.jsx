@@ -27,7 +27,11 @@ const AppRoutes = [
         element: <Packages/>
     },
     {
-        path:"/profile",
+        path: "/profile",
+        element: <Profil />
+    },
+    {
+        path:"/profile/:id",
         element: <Profil/>
     }
 ]
