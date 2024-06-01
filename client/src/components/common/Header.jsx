@@ -5,7 +5,7 @@ import { setLogout } from "../../stores/auth/actions";
 import { useIsLogin } from "../../stores/auth/hooks";
 
 function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü durumu
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
   const isLogin = useIsLogin();
   const navigate = useNavigate();
   const toggleMenu = () => {

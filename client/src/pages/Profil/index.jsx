@@ -30,6 +30,7 @@ function Profil() {
           if (res.data.userType === 0) {
             apiService.post("/package/GetPackagesUser", { id: userId })
               .then(res => {
+                console.log(res);
                 setPackages(res.data);
               })
               .catch(error => console.error('Kullanıcı paketleri alınırken hata oluştu:', error));

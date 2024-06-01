@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { apiService } from '../../api/apiService';
+import { useUserType } from '../../stores/auth/hooks';
+import { useAuthData } from '../../stores/auth/hooks';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function PackageCard({ dietPackage }) {
   const navigate = useNavigate();
@@ -14,13 +17,23 @@ function PackageCard({ dietPackage }) {
   const [editedPrice, setEditedPrice] = useState(dietPackage.price);
   const [editedMonths, setEditedMonths] = useState(dietPackage.month);
   const [editedOnlineCall, setEditedOnlineCall] = useState(dietPackage.isOnlineCall);
+  const userType = useUserType(); 
+  const user = useAuthData();
 
   const handleUsernameClick = () => {
     navigate(`/profile/id=${dietPackage.dietitianId._id}`);
   };
 
-  const handlePurchaseClick = () => {
-    navigate(`/purchase/${dietPackage._id}`);
+  const handlePurchaseClick = async() => {
+    await apiService.post("/package/addedBasket",{ _id: dietPackage._id })
+    .then(res =>{
+      if(res.success){
+        toast.success('Paket Başarıyla Sepete Eklendi', { position: "top-right" });
+      }
+      else{
+        toast.error('Paket Eklenmedi',res.error, { position: "top-right" });
+      }
+    })
   };
 
   const handleEditClick = () => {
@@ -160,7 +173,7 @@ function PackageCard({ dietPackage }) {
             </button>
           </div>
         ) : (
-          location.pathname !== '/profile' && (
+            (userType != 1 && !user.basket.includes(dietPackage._id)) && (
             <div className="flex justify-end">
               <button
                 onClick={handlePurchaseClick}
