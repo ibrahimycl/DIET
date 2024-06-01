@@ -13,7 +13,7 @@ const communityStorage = multer.diskStorage({
 
 const uploadCommunityImage = multer({
   storage: communityStorage,
-  limits: { fileSize: 1024 * 1024 * 5 } // Maksimum 5 MB
+  limits: { fileSize: 1024 * 1024 * 5 } 
 });
 
 const profileStorage = multer.diskStorage({

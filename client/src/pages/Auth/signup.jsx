@@ -1,8 +1,9 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Layout from "../../layout";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { apiService } from '../../api/apiService';
 
 function Signup() {
   const [userName, setUsername] = useState('');
@@ -16,81 +17,37 @@ function Signup() {
   const [userType, setUserType] = useState(0); 
   const navigate = useNavigate();
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
-  };
-
-  const handleBirthdateChange = (e) => {
-    setBirthdate(e.target.value);
-  };
-
-  const handleExperienceChange = (e) => {
-    setExperience(e.target.value);
-  };
-
-  const handleEducationChange = (e) => {
-    setEducation(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const userData = {
-        userType,
-        userName,
-        email,
-        password,
-        name,
-        surname,
-        birthday,
-      };
+    
+    const userData = {
+      userType,
+      userName,
+      email,
+      password,
+      name,
+      surname,
+      birthday,
+    };
 
-      if (userType === 'dietitian') {
-        userData.userType = 1;
-        userData.experience = experience;
-        userData.education = education;
-      }
-      console.log(userType);
-
-      const response = await fetch('http://localhost:5000/api/user/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-  
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log('Signup response:', data);
-        toast.success('Kayıt Başarılı', { position: "top-right" });
-        navigate("/auth/login");
-      } else {
-        const errorMessage = await response.json();
-        console.error('Error:', errorMessage.message);
-        toast.error('Kayıt Başarısız', { position: "top-right" });
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-      toast.error('Bir hata oluştu', { position: "top-right" });
+    if (userType === '1') {
+      userData.userType = 1;
+      userData.experience = experience;
+      userData.education = education;
     }
-  
+    
+    await apiService.post("user/signup", userData)
+    .then(res => {
+      if (res.success) {
+        console.log(res);
+        toast.success('Kayıt Başarılı', { position: "top-right" });
+        setTimeout(() => {
+          navigate("/auth/login");
+        }, 1500);
+      } else {
+        toast.error('Kayıt Başarısız: ' + res.error.message, { position: "top-right" });
+      }
+    })
   };
 
   return (
@@ -104,7 +61,7 @@ function Signup() {
               type="text"
               id="username"
               value={userName}
-              onChange={handleUsernameChange}
+              onChange={(e) => setUsername(e.target.value)}
               maxLength={30} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Kullanıcı adınızı girin"
@@ -117,7 +74,7 @@ function Signup() {
               type="email"
               id="email"
               value={email}
-              onChange={handleEmailChange}
+              onChange={(e) => setEmail(e.target.value)}
               maxLength={60} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="E-posta adresinizi girin"
@@ -130,7 +87,7 @@ function Signup() {
               type="password"
               id="password"
               value={password}
-              onChange={handlePasswordChange}
+              onChange={(e) => setPassword(e.target.value)}
               maxLength={30} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Şifrenizi girin"
@@ -143,7 +100,7 @@ function Signup() {
               type="text"
               id="firstName"
               value={name}
-              onChange={handleFirstNameChange}
+              onChange={(e) => setFirstName(e.target.value)}
               maxLength={30} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Adınızı girin"
@@ -156,7 +113,7 @@ function Signup() {
               type="text"
               id="lastName"
               value={surname}
-              onChange={handleLastNameChange}
+              onChange={(e) => setLastName(e.target.value)}
               maxLength={30} 
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Soyadınızı girin"
@@ -169,7 +126,7 @@ function Signup() {
               type="date"
               id="birthdate"
               value={birthday}
-              onChange={handleBirthdateChange}
+              onChange={(e) => setBirthdate(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
             />
@@ -182,7 +139,7 @@ function Signup() {
                   type="number"
                   id="experience"
                   value={experience}
-                  onChange={handleExperienceChange}
+                  onChange={(e) => setExperience(e.target.value)}
                   min={0} 
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Tecrübenizi girin"
@@ -195,7 +152,7 @@ function Signup() {
                   type="text"
                   id="education"
                   value={education}
-                  onChange={handleEducationChange}
+                  onChange={(e) => setEducation(e.target.value)}
                   maxLength={50} 
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Mezun olduğunuz okulu girin"

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from "../../layout";
-import Card from '../../components/Card/Card';
+import PostCard from '../../components/Card/PostCard';
+import PackageCard from '../../components/Card/PackageCard';
 import { useParams } from 'react-router-dom';
+import { apiService } from '../../api/apiService';
 
 function Profil() {
   const { id } = useParams();
@@ -12,66 +14,59 @@ function Profil() {
 
   const fetchUserData = async () => {
     try {
-      let token;
-      const cookieString = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='));
-
-      if (cookieString) {
-        token = cookieString.split('=')[1];
-      }
-
       let requestData = (id) ? { id: id.split('=')[1] } : {};
-
-      const response = await axios.post('http://localhost:5000/api/profile/id', requestData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const responsePost = await axios.post('http://localhost:5000/api/community', {id:response.data.userId}, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      setUser(response.data);
-      setPosts(responsePost.data);
-      setPackages(response.data.packages);
+  
+      apiService.post("/profile/id", requestData)
+        .then(res => {
+          setUser(res.data);  
+          const userId = res.data.userId;
+  
+          apiService.post("/community", { id: userId })
+            .then(res => {
+              setPosts(res.data);
+            })
+            .catch(error => console.error('Gönderiler alınırken hata oluştu:', error));
+  
+          if (res.data.userType === 0) {
+            apiService.post("/package/GetPackagesUser", { id: userId })
+              .then(res => {
+                setPackages(res.data);
+              })
+              .catch(error => console.error('Kullanıcı paketleri alınırken hata oluştu:', error));
+          }
+  
+          if (res.data.userType === 1) {
+            apiService.post("/package/GetPackagesDietitian", { id: userId })
+              .then(res => {
+                setPackages(res.data);
+              })
+              .catch(error => console.error('Diyetisyen paketleri alınırken hata oluştu:', error));
+          }
+        })
+        .catch(error => console.error('Kullanıcı verisi alınırken hata oluştu:', error));
     } catch (error) {
       console.error('Veri alınırken hata oluştu:', error);
     }
   };
+  
 
   const handleFileSelect = async (event) => {
-    let token;
-
-    const cookieString = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('token='));
-
-    if (cookieString) {
-      token = cookieString.split('=')[1];
-    }
     const image = event.target.files[0];
     if (!image) return;
 
     const formData = new FormData();
     formData.append('image', image);
 
-    try {
-      const response = await axios.post('http://localhost:5000/api/profile/update', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log(response);
-      console.log('Profil resmi başarıyla güncellendi:', response.data);
-      fetchUserData();
-    } catch (error) {
-      console.error('Profil resmi güncellenirken bir hata oluştu:', error);
-    }
+    await apiService.post("/profile/update")
+    .then(res =>{
+      if(res.success){
+        console.log('Profil resmi başarıyla güncellendi:', res.data);
+        fetchUserData();
+      }
+      else{
+        console.error('Profil resmi güncellenirken bir hata oluştu:', res.error);
+      }
+    })
   };
 
   useEffect(() => {
@@ -89,12 +84,12 @@ function Profil() {
               className="hidden"
               id="fileInput"
               onChange={handleFileSelect}
-              disabled={!!id} 
+              disabled={!!id}
             />
             <label
               htmlFor="fileInput"
-              className={`cursor-pointer ${id ? 'pointer-events-none' : ''}`} 
-              onClick={id ? (e) => e.preventDefault() : null} 
+              className={`cursor-pointer ${id ? 'pointer-events-none' : ''}`}
+              onClick={id ? (e) => e.preventDefault() : null}
             >
               <img
                 src={`/images/profile_images/${user.imagePath}`}
@@ -111,29 +106,35 @@ function Profil() {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row lg:space-x-8">
-          <div className="w-full lg:w-2/3 mb-6 lg:mb-0">
-            <h2 className="text-2xl sm:text-3xl font-bold text-first mb-4">Paylaştığım Gönderiler</h2>
-            {posts.length > 0 ? (
-              posts.map((post, index) => (
-                <Card key={index} post={post} />
-              ))
-            ) : (
-              <p className="text-gray-500">Henüz gönderi paylaşılmadı.</p>
-            )}
+        <div className="flex flex-col lg:flex-row lg:space-x-8 mt-10">
+          <div className="w-full lg:w-1/2 mb-6 lg:mb-0">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold ms-16 text-first mb-4">Paylaştığım Gönderiler</h2>
+              {posts.length > 0 ? (
+                posts.map((post, index) => (
+                  <PostCard key={index} post={post} />
+                ))
+              ) : (
+                <p className="text-gray-500">Henüz gönderi paylaşılmadı.</p>
+              )}
+            </div>
           </div>
 
-          <div className="w-full lg:w-1/3">
-            <h2 className="text-2xl sm:text-3xl font-bold text-first mb-4">Sahip Olduğum Paketler</h2>
-            {packages.length > 0 ? (
-              <ul className="list-disc list-inside text-black">
-                {packages.map((pkg, index) => (
-                  <li key={index} className="mb-2">{pkg.name}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">Henüz sahip olduğunuz bir paket yok.</p>
-            )}
+          <div className="border-l border-gray-300 mx-4"></div> {/* Vertical line */}
+
+          <div className="w-full lg:w-1/2">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-first mb-4 ms-16">Sahip Olduğum Paketler</h2>
+              {packages.length > 0 ? (
+                <ul className="list-disc list-inside text-black">
+                  {packages.map((dietPackage, index) => (
+                    <PackageCard key={index} dietPackage={dietPackage} />
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">Henüz sahip olduğunuz bir paket yok.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

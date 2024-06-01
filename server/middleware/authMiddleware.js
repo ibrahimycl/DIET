@@ -23,8 +23,7 @@ const authMiddleware = (req, res, next) => {
 
 // Bu middleware, isteği doğrular ve kullanıcının bir diyetisyen olup olmadığını kontrol eder.
 const authDietitianMiddleware = async (req, res, next) => {
-    const token = req.cookies.jwt;
-    console.log(token);
+    var token = req.cookies.jwt || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized - Missing token' });

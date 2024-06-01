@@ -4,6 +4,7 @@ import Signup from "../pages/Auth/signup";
 import Community from "../pages/Community";
 import Packages from "../pages/Packages";
 import Profil from "../pages/Profil";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = [
     {
@@ -12,11 +13,17 @@ const AppRoutes = [
     },
     {
         path:"/auth/login",
-        element: <Login/>
+        element: 
+            <ProtectedRoute>
+                <Login />
+            </ProtectedRoute>
     },
     {
         path:"/auth/signup",
-        element: <Signup/>
+        element: 
+            <ProtectedRoute>
+                <Signup />
+            </ProtectedRoute>
     },
     {
         path:"/community",

@@ -3,15 +3,16 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faTrashAlt, faEdit, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { apiService } from '../../api/apiService';
 
-function Card({ post }) {
+function PostCard({ post }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [likes, setLikes] = useState(post.like);
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(post.description);
   const [editedDescription, setEditedDescription] = useState(post.description);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false); // State to handle UI update on delete
+  const [isDeleted, setIsDeleted] = useState(false); 
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -20,78 +21,42 @@ function Card({ post }) {
   };
 
   const handleLikeClick = async () => {
-    try {
-      const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        .split('=')[1];
-      const response = await fetch('http://localhost:5000/api/community/changeLikes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          _id: post._id,
-        }),
-      });
-      const data = await response.json();
-      setLikes(data.like);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+
+    await apiService.post("/community/changeLikes",{ _id: post._id })
+    .then(res =>{
+      setLikes(res.data.like);
+    })
   };
 
   const handleDelete = async () => {
-    try {
-      let token;
-      const cookieString = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='));
-
-      if (cookieString) {
-        token = cookieString.split('=')[1];
+    await apiService.post("/community/delete", { _id: post._id })
+    .then(res =>{
+      if (res.success) {
+        console.log('Deleted post:', post._id);
+        setIsDeleted(true); // Update the state to remove the post from the UI
       }
-
-      await axios.post('http://localhost:5000/api/community/delete', {_id: post._id}, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log('Deleted post:', post._id);
-      setIsDeleted(true); // Update the state to remove the post from the UI
-    } catch (error) {
-      console.error('Error deleting the post:', error);
-    }
+      else{
+        console.error('Error deleting the post:', res.error);
+      }
+    })
   };
 
   const handleUpdate = async () => {
-    try {
-      let token;
-      const cookieString = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='));
-
-      if (cookieString) {
-        token = cookieString.split('=')[1];
+    await apiService.post("community/update", 
+    {
+      _id: post._id,
+      description: editedDescription
+    } )
+    .then(res =>{
+      if(res.success)
+      {
+        setDescription(editedDescription);
+        setIsEditing(false);
       }
-
-      await axios.post('http://localhost:5000/api/community/update', {
-        _id: post._id,
-        description: editedDescription
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      setDescription(editedDescription);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error updating the description:', error);
-    }
+      else{
+        console.error('Error updating the description:', res.error);
+      }
+    })
   };
 
   const handleCancelEdit = () => {
@@ -152,10 +117,10 @@ function Card({ post }) {
         ) : (
           <div className={`overflow-hidden ${isExpanded ? '' : 'h-20'} transition-all duration-300 ease-in-out`}>
             <p className="text-first mb-4">
-              {isExpanded ? description : `${description.substring(0, 150)}...`}
+              {isExpanded ? description : `${description.substring(0, 150)}`}
               {description.length > 150 && (
                 <span className="text-green cursor-pointer" onClick={toggleReadMore}>
-                  {isExpanded ? ' Daha az göster' : ' Devamını oku'}
+                  {isExpanded ? ' Daha az göster' : ' ...Devamını oku'}
                 </span>
               )}
             </p>
@@ -191,4 +156,4 @@ function Card({ post }) {
   );
 }
 
-export default Card;
+export default PostCard;

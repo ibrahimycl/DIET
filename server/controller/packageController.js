@@ -4,11 +4,11 @@ const User = require("../model/userModel");
 // Diyetisyenin yeni bir paket oluşturduğu fonksiyon
 exports.createPackage = async (req, res) => {
 
-    const {dietitianId, name, isOnlineCall, month, price, describe} = req.body;
+    const {dietitianId, name, isOnlineCall, month, price, description, iban, accountHolderName, bankName} = req.body;
     var active = true;
 
     try {
-        const newPackage = await Package.create({dietitianId, name, isOnlineCall, month, price, describe, active});
+        const newPackage = await Package.create({dietitianId, name, isOnlineCall, month, price, description, iban, accountHolderName, bankName, active});
         res.status(200).json("Package Added Successfully")
     } catch (error) {
         res.status(400).json({ error: error.message })
@@ -70,17 +70,61 @@ exports.changeActiveStatus = async (req, res) =>{
 }
 
 // Diyetisyenin paketlerini görüntülediği fonksiyon
-exports.GetPackages = async (req, res) => {
-
-    const {dietitianId} = req.body;
+exports.GetPackagesDietitian = async (req, res) => {
+    var { id, userId } = req.body;
+    id = (!id)? userId : id;
 
     try {
-        const listPackages = await Package.find({dietitianId:dietitianId});
+        const listPackages = await Package.find({dietitianId:id}).populate({
+            path: 'dietitianId', 
+            select: 'name surname userName' 
+        })
+        .sort({ _id: -1 });;
         res.status(200).json(listPackages);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
+
+// Tüm paketlerin görüntülendiği fonksiyon
+exports.GetPackages = async (req, res) => {
+    try {
+        const listPackages = await Package.find().populate({
+            path: 'dietitianId', 
+            select: 'name surname userName' 
+        })
+        .sort({ _id: -1 });
+        res.status(200).json(listPackages);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+//Kullanıcıların satın aldıkları paketlerin görüntülendği fonk.
+exports.GetPackagesUser = async (req, res) => {
+    var { id, userId } = req.body;
+    id = (!id)? userId : id;
+    try {
+        const user = await User.findById(id);
+        if (user && user.ownedPackages && user.ownedPackages.length > 0) {
+            const listPackages = await Package.find({ _id: { $in: user.ownedPackages } })
+                .populate({
+                    path: 'dietitianId',
+                    select: 'name surname userName'
+                })
+                .sort({ _id: -1 });
+            
+            return res.status(200).json(listPackages);
+        } else {
+            return res.status(200).json([]); // Kullanıcının paketi yoksa boş bir liste döndür
+        }
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+
+
 // exports.deletePackage = async (req, res) => {
 //     const { _id } = req.body;
 

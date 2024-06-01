@@ -3,56 +3,38 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../layout";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { setLogin } from "../../stores/auth/actions";
+import { apiService } from '../../api/apiService';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/api/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-  
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log('Login response:', data);
-        toast.success('Giriş Başarılı', { position: "top-right" });
-        document.cookie = `token=${data.token}; path=/`; // Assuming token is in data.token
-        navigate("/");
-      } else {
-        const errorMessage = await response.json();
-        console.error('Error:', errorMessage);
-        toast.error('Hatalı Email veya Şifre', { position: "top-right" });
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Bir hata oluştu', { position: "top-right" });
-    }
-  
+
+    await apiService.post("/user/login", { email, password })
+      .then(res => {
+        if (res.success) {
+          console.log(res.data);
+          setLogin(res.data);
+          toast.success('Giriş Başarılı', { position: "top-right" });
+          setTimeout(() => {
+            navigate("/");
+          }, 1500);
+        } else {
+          toast.error('Hatalı Email veya Şifre', { position: "top-right" });
+        }
+      })
+
     setEmail('');
     setPassword('');
   };
-  
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-xl ">
+      <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-xl">
         <h2 className="text-2xl font-bold mb-6">Giriş Yap</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -61,8 +43,8 @@ function Login() {
               type="email"
               id="email"
               value={email}
-              onChange={handleEmailChange}
-              maxLength={60} 
+              onChange={(e) => setEmail(e.target.value)}
+              maxLength={60}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="E-posta adresinizi girin"
               required
@@ -74,8 +56,8 @@ function Login() {
               type="password"
               id="password"
               value={password}
-              onChange={handlePasswordChange}
-              maxLength={30} 
+              onChange={(e) => setPassword(e.target.value)}
+              maxLength={30}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Şifrenizi girin"
               required

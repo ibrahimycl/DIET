@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import testDataReducer from "./testStore"
+import authDataReducer from "./auth"
 
 export default configureStore({
     reducer: {
-        testData: testDataReducer,
+        authData: authDataReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({

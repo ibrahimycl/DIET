@@ -24,7 +24,9 @@ exports.loginUser = async (req, res) => {
 	try {
 		user = await User.findOne({email:email})
 		const token = createToken(res, user._id)
-		res.status(200).json({ user , token })
+		const userType = user.userType
+		isLogin = true;
+		res.status(200).json({ user , token , userType, isLogin})
 	} catch (error) {
 		res.status(400).json({ error: error.message })
 	}

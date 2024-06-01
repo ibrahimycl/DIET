@@ -3,7 +3,8 @@ import axios from 'axios';
 import Layout from "../../layout";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
-import Card from '../../components/Card/Card';
+import PostCard from '../../components/Card/PostCard';
+import { apiService } from '../../api/apiService';
 
 function Community() {
   const [text, setText] = useState('');
@@ -12,51 +13,27 @@ function Community() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    axios.post('http://localhost:5000/api/community')
-      .then(response => setPosts(response.data))
+    apiService.post("/community")
+      .then(res => setPosts(res.data))
       .catch(error => console.error('Gönderiler alınırken hata oluştu:', error));
-    console.log(posts);
   }, []);
-
-  const handleTextChange = (event) => {
-    setText(event.target.value);
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const formData = new FormData();
-      formData.append('text', text);
-      formData.append('image', image);
-
-      const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        .split('=')[1];
-
-      const response = await axios.post('http://localhost:5000/api/community/create', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
+    const formData = new FormData();
+    formData.append('text', text);
+    formData.append('image', image);
+    
+    await apiService.post("community/create", formData)
+      .then(res => {
+        if (res.success) {
+          const data = res.data;
+          window.location.reload();
+        } else {
+          console.error('Gönderi oluşturulurken hata oluştu:', res.statusText);
         }
       });
-
-      if (response.status === 200) {
-        const data = response.data;
-        window.location.reload();
-      } else {
-        console.error('Gönderi oluşturulurken hata oluştu:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Gönderi oluşturulurken hata oluştu:', error);
-    }
   };
 
   return (
@@ -70,7 +47,7 @@ function Community() {
               <textarea
                 id="text"
                 value={text}
-                onChange={handleTextChange}
+                onChange={(e) => setText(e.target.value)}
                 className="w-full px-4 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green"
                 rows="4"
                 placeholder="Bir şeyler paylaş..."
@@ -85,7 +62,11 @@ function Community() {
               <input
                 type="file"
                 id="image"
-                onChange={handleImageChange}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setImage(file);
+                  setImagePreview(URL.createObjectURL(file));
+                }}
                 className="hidden"
               />
               <button
@@ -98,10 +79,9 @@ function Community() {
             {imagePreview && <img src={imagePreview} alt="Image Preview" className="mt-4 w-full h-auto rounded-lg" />}
           </form>
 
-
           <div className="w-full max-w-lg sm:max-w-2xl lg:max-w-4xl">
             {posts.map((post, index) => (
-              <Card key={index} post={post} />
+              <PostCard key={index} post={post} />
             ))}
           </div>
         </div>

@@ -1,34 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiService } from "../../api/apiService";
+import { setLogout } from "../../stores/auth/actions";
+import { useIsLogin } from "../../stores/auth/hooks";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü durumu
-  const hasToken = document.cookie.includes('token');
+  const isLogin = useIsLogin();
   const navigate = useNavigate();
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/logout', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (response.ok) {
-        document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-        navigate("/");
-      } else {
-        console.error('Logout işlemi başarısız oldu.');
-      }
-    } catch (error) {
-      console.error('Logout işlemi sırasında bir hata oluştu:', error);
-    }
-  };
+    await apiService.get("/user/logout")
+    .then(res => {
+      setLogout()
+      navigate("/")
+    })
+  }
 
   return (
     <nav className="bg-lighterGreen bg-opacity-75 p-4">
@@ -44,7 +34,7 @@ function Header() {
             </div>
           </div>
           <div className="flex">
-            {hasToken ? (
+            {isLogin ? (
               <>
                 <a href="/profile" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Profil</a>
                 <a href="/cart" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Sepet</a>
@@ -72,7 +62,7 @@ function Header() {
           <a href="/community" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Topluluk</a>
           <a href="/packages" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Paketler</a>
           <a href="#" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Görüşmeler</a>
-          {hasToken ? (
+          {isLogin ? (
             <>
               <a href="/profile" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Profil</a>
               <a href="/cart" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Sepet</a>
