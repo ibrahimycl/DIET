@@ -25,7 +25,7 @@ function Community() {
     formData.append('text', text);
     formData.append('image', image);
     
-    await apiService.post("community/create", formData)
+    await apiService.post("community/create", formData,{ headers: {'Content-Type': 'multipart/form-data'}})
       .then(res => {
         if (res.success) {
           const data = res.data;

@@ -30,7 +30,6 @@ function Profil() {
           if (res.data.userType === 0) {
             apiService.post("/package/GetPackagesUser", { id: userId })
               .then(res => {
-                console.log(res);
                 setPackages(res.data);
               })
               .catch(error => console.error('Kullanıcı paketleri alınırken hata oluştu:', error));
@@ -58,7 +57,7 @@ function Profil() {
     const formData = new FormData();
     formData.append('image', image);
 
-    await apiService.post("/profile/update")
+    await apiService.post("/profile/update", formData,{ headers: {'Content-Type': 'multipart/form-data'}})
     .then(res =>{
       if(res.success){
         console.log('Profil resmi başarıyla güncellendi:', res.data);

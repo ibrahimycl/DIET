@@ -37,7 +37,7 @@ function Header() {
             {isLogin ? (
               <>
                 <a href="/profile" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Profil</a>
-                <a href="/cart" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Sepet</a>
+                <a href="/basket" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Sepet</a>
                 <button onClick={handleLogout} className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Çıkış</button>
               </>
             ) : (
@@ -65,7 +65,7 @@ function Header() {
           {isLogin ? (
             <>
               <a href="/profile" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Profil</a>
-              <a href="/cart" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Sepet</a>
+              <a href="/basket" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Sepet</a>
               <button onClick={handleLogout} className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Çıkış</button>
             </>
           ) : (

@@ -5,6 +5,8 @@ import Community from "../pages/Community";
 import Packages from "../pages/Packages";
 import Profil from "../pages/Profil";
 import ProtectedRoute from "./ProtectedRoute";
+import Basket from "../pages/Basket";
+import Payment from "../pages/Payment";
 
 const AppRoutes = [
     {
@@ -40,6 +42,14 @@ const AppRoutes = [
     {
         path:"/profile/:id",
         element: <Profil/>
+    },
+    {
+        path:"/basket",
+        element: <Basket/>
+    },
+    {
+        path:"/payment",
+        element: <Payment/>
     }
 ]
 

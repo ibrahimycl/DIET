@@ -1,5 +1,5 @@
 const express = require("express");
-const { createPackage, deletePackage, changeActiveStatus, updatePackage, GetPackages, GetPackagesDietitian, GetPackagesUser}= require("../controller/packageController");
+const { createPackage, deletePackage, changeActiveStatus, updatePackage, GetPackages, GetPackagesDietitian, GetPackagesUser, GetBasket}= require("../controller/packageController");
 const { addBasket, deleteBasket } = require("../controller/basketController");
 const { addPayment } = require("../controller/paymentController");
 const { authMiddleware, authDietitianMiddleware, } = require("../middleware/authMiddleware");
@@ -13,6 +13,7 @@ router.post("/update/:id",authDietitianMiddleware, updatePackage);
 router.post("/changeActive",authDietitianMiddleware, changeActiveStatus);
 router.post("/GetPackagesDietitian",authMiddleware, GetPackagesDietitian);
 router.post("/GetPackagesUser",authMiddleware, GetPackagesUser);
+router.post("/GetBasket",authMiddleware, GetBasket);
 // router.post("/deleted",authMiddleware, deletePackage);
 
 //basket

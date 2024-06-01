@@ -44,9 +44,13 @@ class ApiService {
     }
   }
 
-  async post(endpoint, data) {
+  async post(endpoint, data, contentType = 'application/json') {
     try {
-      const response = await this.axiosInstance.post(endpoint, data);
+      const headers = {
+        'Content-Type': contentType,
+      };
+
+      const response = await this.axiosInstance.post(endpoint, data, { headers });
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response ? error.response.data : error.message };

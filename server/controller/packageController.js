@@ -116,7 +116,29 @@ exports.GetPackagesUser = async (req, res) => {
             
             return res.status(200).json(listPackages);
         } else {
-            return res.status(200).json([]); // Kullanıcının paketi yoksa boş bir liste döndür
+            return res.status(200).json([]); 
+        }
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+//Kullanıcıların sepetine ekledikleri paketlerin görüntülendği fonk.
+exports.GetBasket = async (req, res) => {
+    const { userId } = req.body;
+    try {
+        const user = await User.findById(userId);
+        if (user && user.basket && user.basket.length > 0) {
+            const listPackages = await Package.find({ _id: { $in: user.basket } })
+                .populate({
+                    path: 'dietitianId',
+                    select: 'name surname userName'
+                })
+                .sort({ _id: -1 });
+            
+            return res.status(200).json(listPackages);
+        } else {
+            return res.status(200).json([]); 
         }
     } catch (error) {
         return res.status(400).json({ error: error.message });
