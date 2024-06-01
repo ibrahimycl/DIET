@@ -30,7 +30,7 @@ function Header() {
               <a href="/" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Ana Sayfa</a>
               <a href="/community" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Topluluk</a>
               <a href="/packages" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Paketler</a>
-              <a href="#" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Görüşmeler</a>
+              <a href="/food" className="text-green hover:bg-lightGreen px-3 py-2 rounded-md">Yemek Takibi</a>
             </div>
           </div>
           <div className="flex">
@@ -61,7 +61,7 @@ function Header() {
           <a href="/" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Ana Sayfa</a>
           <a href="/community" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Topluluk</a>
           <a href="/packages" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Paketler</a>
-          <a href="#" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Görüşmeler</a>
+          <a href="/food" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Yemek Takibi</a>
           {isLogin ? (
             <>
               <a href="/profile" className="text-green hover:bg-lightGreen block px-3 py-2 rounded-md">Profil</a>
