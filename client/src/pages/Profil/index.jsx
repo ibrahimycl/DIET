@@ -5,12 +5,23 @@ import PostCard from '../../components/Card/PostCard';
 import PackageCard from '../../components/Card/PackageCard';
 import { useParams } from 'react-router-dom';
 import { apiService } from '../../api/apiService';
+import { useIsLogin } from '../../stores/auth/hooks';
+
 
 function Profil() {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const login = useIsLogin(); 
+
+  useEffect(() => {
+    if (login !== null) {
+      setLoading(false);
+      fetchUserData();
+    }
+  }, [login]);
 
   const fetchUserData = async () => {
     try {
@@ -69,9 +80,9 @@ function Profil() {
     })
   };
 
-  useEffect(() => {
-    fetchUserData();
-  }, [id]);
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
 
   return (
     <Layout>

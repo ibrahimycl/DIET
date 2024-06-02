@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import Layout from "../../layout";
 import { apiService } from '../../api/apiService';
+import { useIsLogin } from '../../stores/auth/hooks';
 
 function FoodPage() {
   const [foodName, setFoodName] = useState('');
   const [foods, setFoods] = useState([]);
   const [todayFoods, setTodayFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const login = useIsLogin(); 
 
   useEffect(() => {
-    fetchAllFoods();
-    fetchTodayFoods();
-  }, []);
+    if (login !== null) {
+      setLoading(false);
+      fetchAllFoods();
+      fetchTodayFoods();
+    }
+  }, [login]);
 
   const fetchAllFoods = async () => {
 
     await apiService.get("/food/getAllFoods")
     .then(res =>{
-      setFoods(response.data);
+      setFoods(res.data);
     })
   };
 
@@ -24,7 +30,7 @@ function FoodPage() {
 
     await apiService.get("/food/getTodayFood")
     .then(res =>{
-      setTodayFoods(response.data);
+      setTodayFoods(res.data);
     })
   };
 
@@ -37,9 +43,11 @@ function FoodPage() {
         fetchTodayFoods(); 
       }
     })
-    
-  
   };
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
 
   return (
     <Layout>
@@ -58,7 +66,7 @@ function FoodPage() {
             />
             <button
               onClick={handleAddFood}
-              className="bg-first text-white py-2 px-4 sm:px-6 rounded hover:bg-green transition duration-150 ml-2"
+              className="bg-first text-white py-2 px-4 sm:px-6 rounded hover:bg-green transition duration-150 ml-2 mt-5"
             >
               Ekle
             </button>

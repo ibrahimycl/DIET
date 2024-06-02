@@ -4,13 +4,27 @@ import Layout from "../../layout";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setLogin } from "../../stores/auth/actions";
+import { useIsLogin } from '../../stores/auth/hooks';
 import { apiService } from '../../api/apiService';
+import { useEffect } from 'react';
+
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(true);
+  const login = useIsLogin(); 
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    if (login !== null) {
+      setLoading(false);
+    }
+  },[login])
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 

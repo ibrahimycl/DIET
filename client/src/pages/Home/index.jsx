@@ -1,6 +1,21 @@
 import Layout from "../../layout";
+import { useEffect , useState} from "react";
+import { useIsLogin } from '../../stores/auth/hooks';
+
 
 function Home() {
+  const [loading, setLoading] = useState(true);
+  const login = useIsLogin(); 
+
+  useEffect(()=>{
+    if (login !== null) {
+      setLoading(false);
+    }
+  },[login])
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
   return (
     <Layout>
       <section className="w-full bg-first flex justify-center">

@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Layout from "../../layout";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { apiService } from '../../api/apiService';
+import { useIsLogin } from '../../stores/auth/hooks';
+
 
 function Signup() {
   const [userName, setUsername] = useState('');
@@ -15,8 +18,19 @@ function Signup() {
   const [experience, setExperience] = useState('');
   const [education, setEducation] = useState('');
   const [userType, setUserType] = useState(0); 
+  const [loading, setLoading] = useState(true);
+  const login = useIsLogin(); 
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    if (login !== null) {
+      setLoading(false);
+    }
+  },[login])
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     
