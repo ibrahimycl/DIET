@@ -28,7 +28,9 @@ function PackageCard({ dietPackage, removeFromBasket }) {
       .then(res => {
         if (res.success) {
           toast.success('Paket Başarıyla Sepete Eklendi', { position: "top-right" });
-          window.location.reload();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
         }
         else {
           toast.error('Paket Eklenmedi', res.error, { position: "top-right" });
@@ -179,7 +181,7 @@ function PackageCard({ dietPackage, removeFromBasket }) {
             </button>
           </div>
         ) : (
-          (userType !== 1 && user && 
+          (userType != 1 && user && 
             !user.basket.includes(dietPackage._id) &&
             !user.ownedPackages.some(pkg => pkg._id === dietPackage._id)) && (
             <div className="flex justify-end">
