@@ -1,6 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
-import useInitialAuth from "../../hooks/useInitialAuth";
 
 const initialState = {
     isLogin: false,

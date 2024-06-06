@@ -14,7 +14,7 @@ function Header() {
 
   const handleLogout = async () => {
     await apiService.get("/user/logout")
-    .then(res => {
+    .then(() => {
       setLogout()
       navigate("/")
     })

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from "../../layout";
 import PackageCard from '../../components/Card/PackageCard';
 import { apiService } from '../../api/apiService';
@@ -39,7 +39,7 @@ function Basket() {
 
   const handleRemoveFromBasket = async (packageId) => {
     await apiService.post("/package/deleteBasket", { _id: packageId })
-      .then(res => {
+      .then(() => {
           GetBasket(); 
         })
   };
