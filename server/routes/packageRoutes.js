@@ -13,12 +13,13 @@ router.post("/update/:id",authDietitianMiddleware, updatePackage);
 router.post("/changeActive",authDietitianMiddleware, changeActiveStatus);
 router.post("/GetPackagesDietitian",authMiddleware, GetPackagesDietitian);
 router.post("/GetPackagesUser",authMiddleware, GetPackagesUser);
-router.post("/GetBasket",authMiddleware, GetBasket);
 // router.post("/deleted",authMiddleware, deletePackage);
 
 //basket
 router.post("/addedBasket",authMiddleware,addBasket);
 router.post("/deleteBasket",authMiddleware,deleteBasket);
+router.post("/GetBasket",authMiddleware, GetBasket);
+
 
 //payment
 router.post("/addPayment",authMiddleware,addPayment);

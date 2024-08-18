@@ -57,12 +57,12 @@ const server = app.listen(port, () => {
 const io = new Server.Server(server, {
     pingTimeout: 60000,
     cors: {
-      origin: 'http://127.0.0.1:5173/',
+      origin: '*',
     },
   });
   io.on('connection', (socket) => {
     socket.on('setup', (userData) => {
-      socket.join(userData.id);
+      socket.join(userData._id);
       socket.emit('connected');
     });
     socket.on('join room', (room) => {

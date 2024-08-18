@@ -99,7 +99,7 @@ function PackageCard({ dietPackage, removeFromBasket }) {
               dietPackage.name
             )}
           </div>
-          {location.pathname === '/profile' && (
+          {location.pathname === '/profile' && userType == 1 &&(
             <div className="flex space-x-2">
               <FontAwesomeIcon icon={faEdit} className="cursor-pointer" onClick={handleEditClick} />
             </div>

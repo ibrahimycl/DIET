@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Basket from "../pages/Basket";
 import Payment from "../pages/Payment";
 import Food from "../pages/Food";
+import Chat from "../pages/Chat";
 
 const AppRoutes = [
     {
@@ -55,6 +56,10 @@ const AppRoutes = [
     {
         path:"/food",
         element: <Food/>
+    },
+    {
+        path:"/chat",
+        element: <Chat/>
     }
 ]
 

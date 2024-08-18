@@ -2,31 +2,32 @@ const Chat = require('../model/chatModel.js');
 const user = require('../model/userModel.js');
 
 exports.accessChats = async (req, res) => {
-  const { userId } = req.body;
+  const { userId,userId2 } = req.body;
   if (!userId) res.send({ message: "Provide User's Id" });
   let chatExists = await Chat.find({
     isGroup: false,
     $and: [
       { users: { $elemMatch: { $eq: userId } } },
-      { users: { $elemMatch: { $eq: req.rootUserId } } },
+      { users: { $elemMatch: { $eq: userId2 } } },
     ],
   })
-    .populate('users', '-password')
-    .populate('latestMessage');
+  .populate('users', '-password')
+  .populate('latestMessage');
   chatExists = await user.populate(chatExists, {
     path: 'latestMessage.sender',
-    select: 'name email profilePic',
+    select: 'name email imagePath',
   });
   if (chatExists.length > 0) {
     res.status(200).send(chatExists[0]);
   } else {
     let data = {
       chatName: 'sender',
-      users: [userId, req.rootUserId],
+      users: [userId, userId2],
       isGroup: false,
     };
     try {
       const newChat = await Chat.create(data);
+      console.log(newChat);
       const chat = await Chat.find({ _id: newChat._id }).populate(
         'users',
         '-password'
@@ -38,9 +39,10 @@ exports.accessChats = async (req, res) => {
   }
 };
 exports.fetchAllChats = async (req, res) => {
+  const { userId } = req.body;
   try {
     const chats = await Chat.find({
-      users: { $elemMatch: { $eq: req.rootUserId } },
+      users: { $elemMatch: { $eq: userId } },
     })
       .populate('users')
       .populate('latestMessage')

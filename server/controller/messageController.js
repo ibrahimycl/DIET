@@ -2,9 +2,9 @@ const Message = require('../model/messageModel.js');
 const Chat = require('../model/chatModel.js');
 
 exports.sendMessage = async (req, res) => {
-  const { chatId, message } = req.body;
+  const { chatId, message, userId } = req.body;
   try {
-    let msg = await Message.create({ sender: req.rootUserId, message, chatId });
+    let msg = await Message.create({ sender: userId, message, chatId });
     msg = await (
       await msg.populate('sender', 'name imagePath email')
     ).populate({
@@ -14,7 +14,7 @@ exports.sendMessage = async (req, res) => {
       populate: {
         path: 'users',
         select: 'name email imagePath',
-        model: 'User',
+        model: 'users',
       },
     });
     await Chat.findByIdAndUpdate(chatId, {
@@ -32,7 +32,7 @@ exports.getMessages = async (req, res) => {
     let messages = await Message.find({ chatId })
       .populate({
         path: 'sender',
-        model: 'User',
+        model: 'users',
         select: 'name profilePic email',
       })
       .populate({

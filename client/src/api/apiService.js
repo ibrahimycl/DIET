@@ -35,7 +35,7 @@ class ApiService {
     );
   }
 
-  async get(endpoint, params = {}) {
+  async                                                                                                                                                       (endpoint, params = {}) {
     try {
       const response = await this.axiosInstance.get(endpoint, { params });
       return { success: true, data: response.data };

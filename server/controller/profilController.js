@@ -13,20 +13,6 @@ exports.getProfile = async (req, res) => {
       return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
     }
 
-    let packages = [];
-
-    if (user.userType === 0) {
-      // Normal kullanıcı
-      if (user.ownedPackages) {
-        packages = await Package.find({ _id: { $in: user.ownedPackages } });
-      }
-    } else if (user.userType === 1) {
-      // Diyetisyen
-      packages = await Package.find({ dietitianId: id });
-    } else {
-      return res.status(400).json({ message: 'Geçersiz kullanıcı tipi' });
-    }
-
     res.status(200).json({
       userId:id,
       name: user.name,
@@ -35,8 +21,7 @@ exports.getProfile = async (req, res) => {
       imagePath: user.imagePath,
       email: user.email,
       birthday: user.birthday,
-      userType: user.userType,
-      packages: packages
+      userType: user.userType
     });
   } catch (error) {
     console.error('Profil verisi alınırken hata oluştu:', error);
@@ -61,3 +46,13 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: 'Sunucu hatası' });
   }
 };
+
+exports.getUsers = async (req ,res) =>{
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Kullanıcılar alınırken bir hata oluştu:', error);
+    res.status(500).json({ message: 'Sunucu hatası' });
+  }
+}
